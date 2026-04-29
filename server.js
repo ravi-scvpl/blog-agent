@@ -1,7 +1,12 @@
 import 'dotenv/config';
 import express from 'express';
 import os from 'os';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import generateBlogRouter from './routes/generateBlog.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -10,13 +15,13 @@ const PORT = process.env.PORT || 8000;
 app.use(express.json());
 
 // Serve static HTML/CSS/JS frontend
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // API Routes
 app.use('/generate', generateBlogRouter);
 
 // Base route for sanity check
-app.get('/', (req, res) => {
+app.get('/status', (req, res) => {
     res.send({ status: "AI Blog Agent Server is running" });
 });
 
